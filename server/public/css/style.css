@@ -1,0 +1,17 @@
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #00B7FF;
+}
+.small{
+	margin-left: 22px;
+	padding: 15px 0px;
+}
+#inputsubmit{
+	text-align: center;
+	margin:auto;
+	margin-left: 500px;
+}

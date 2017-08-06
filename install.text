@@ -1,0 +1,9 @@
+快速搭建vue项目 使用vue-cli
+全局安装 vue-cli
+
+npm install -g vue-cli
+创建一个基于 "webpack" 模板的新项目
+vue init webpack app
+安装依赖，走你
+cd app && npm install
+npm run dev
