@@ -9,18 +9,38 @@ router.all('*', function(req, res, next){
     next();
 });
 
-router.post('/get-sign',(req,res,next)=>{
+router.post('/get-session',(req,res,next)=>{
+	var data,_user=req.session.user;
+	if(_user){
+		data={
+			staff_name:_user.userName,
+			isAdmin:_user.isAdmin,
+			staff_id:_user._id		
+		}
+	}
+	res.json({
+		data:data || null,
+		sccuess:1
+	})
+})
+router.post('/get-logout',(req,res,next)=>{
+	delete req.session.user;
+	res.json({
+		data:true,
+		sccuess:1		
+	})
+})
+router.post('/get-login',(req,res,next)=>{
 	var userName=req.body.userName;
 	var passwprd=req.body.password;
 	UserModel.findName(userName,(err,data)=>{
-		console.log('。。。登录')
 		console.log(data)
 		if(err){
 			return console.log(err)
 		}
 		if(!data){
 			res.json({
-				data:'该用户不存',
+				data:'该用户不存在',
 				sccuess:0				
 			})
 		}else{
@@ -29,8 +49,13 @@ router.post('/get-sign',(req,res,next)=>{
 					return console.log(err)
 				}
 				if(isMatch){
+					req.session.user = data;
 					res.json({
-						data:isMatch,
+						data:{
+							staff_name:data.userName,
+							isAdmin:data.isAdmin,
+							staff_id:data._id
+						},
 						sccuess:1							
 					})
 				}else{

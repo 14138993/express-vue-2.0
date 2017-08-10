@@ -3,6 +3,9 @@ var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
+var session = require('express-session');
+var MongoStore = require('connect-mongo')(session);
+var dbUrl='mongodb://localhost:27017/movie';
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 
@@ -24,12 +27,25 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(session({
+    secret:'userSid',
+    name:'logonUser',
+    cookie: {
+      maxAge: 1000 * 60 * 60 * 24 * 5
+    },
+    store: new MongoStore({
+      url: dbUrl,
+      collection: 'sessions'
+    }),
+    resave: false,
+    saveUninitialized: true    
+}));
 
 app.use('/api/movie', index);
 app.use('/api/admin', admin);
-app.use('/api/user', user);
+app.use('/api/user',  user);
 
-mongoose.connect('mongodb://localhost:27017/movie',(err)=>{
+mongoose.connect(dbUrl,(err)=>{
 	if(err){
 		console.log('数据库连接失败')
 	}else{

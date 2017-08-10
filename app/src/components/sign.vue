@@ -1,4 +1,4 @@
-<style lang="scss">
+<style lang="scss" scoped>
 .form-group{
 	width:500px;
 	>label{
@@ -74,7 +74,7 @@ import {mapActions,mapState} from 'vuex'
             		this.api='api/user/set-signup';
             		return '注册'
             	}else{
-            		this.api='api/user/get-sign';
+            		this.api='api/user/get-login';
             		return '登录'
             	}
             }
@@ -86,11 +86,17 @@ import {mapActions,mapState} from 'vuex'
 			save(){
 				this.sing.isAdmin=this.sing.isAdmin ? 1 :0;
 				this.$http.ajax(res=>{
-					if(!res.success)return;
-					this.dataList=res.data;					
-				},this.api,this.sing,'POST')				
+					if(!res.sccuess)return;
+					if(this.title==2)this.user=res.data;	
+					this.$emit('logins',res.data)	
+					this.sing.userName=this.sing.password=''
+					this.sing.isAdmin=0					
+				},this.api,this.sing)				
 				this.close();
 			}
+		},
+		mounted(){
+
 		}
 	}
 </script>

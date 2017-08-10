@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 const  movie = resolve=>require(['../movie/index.vue'],resolve)
+const  error = resolve=>require(['../movie/404.vue'],resolve)
 Vue.use(VueRouter)
 
 const router = new VueRouter({
@@ -47,9 +48,18 @@ const router = new VueRouter({
                   resolve(require('../movie/subpage/admin.vue'));
               },'movie/adminIndex')
           }
-        }
+        }       
       ]
-    }
+    },
+    {
+      path:'*',
+      component:error
+    },
+    {
+      name:'errorIndex',
+      path:'/error',
+      component:error
+    }    
   ],
   scrollBehavior (to, from, savedPosition) {
       if (savedPosition) {
@@ -63,4 +73,6 @@ const router = new VueRouter({
       }
   }  
 })
+
+
 export default router
