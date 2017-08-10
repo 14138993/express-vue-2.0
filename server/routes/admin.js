@@ -56,8 +56,10 @@ router.get('/delete-movie',(req,res,next)=>{
 })
 //录入新的电视数据
 router.post('/save-movie', function(req, res, next) {
+	// console.log(req.body)
 	var _movie,movieupdata;
 	var id=req.body.id;
+	console.log(id)
 	var movie_data={
 			title:req.body.title,
 			doctor:req.body.doctor,
@@ -68,7 +70,7 @@ router.post('/save-movie', function(req, res, next) {
 			flash:req.body.flash,
 			url:req.body.url,	
 		}
-	if(id !== 'undefined'){
+	if(!!id){
 		//通过id修改单条数据，			
 		movieModel.findByIdAndUpdate(id,movie_data,(err,data)=>{
 			if(err){
@@ -81,7 +83,7 @@ router.post('/save-movie', function(req, res, next) {
 				url:req.url				
 			})
 		})
-		//通过返回修改单挑数据
+		//通过返回修改单条数据
 		// movieModel.findById(id,(err,movie)=>{
 		// 			if(err){
 		// 				console.log(err)
@@ -110,7 +112,7 @@ router.post('/save-movie', function(req, res, next) {
 					console.log(err)
 				};
 				res.json({
-						data:true,
+						data:movie,
 						success:1,
 						url:req.url
 				});

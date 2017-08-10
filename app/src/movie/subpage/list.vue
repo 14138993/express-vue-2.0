@@ -34,27 +34,63 @@
 				</tbody>
 			</table>
 		</div>
+		<alert
+			:alert-data='alertData'
+			@alertCallback='alertData.confirmCallback'
+		></alert>
 	</div>
 </template>
 <script>
+import Alert from '../../components/alert'
 	export default {
+		components:{
+			Alert
+		},
 		data(){
 			return {
+	      alertData:{
+	      	type:'loading',
+	      	isShow:true,
+	      	message:'',
+	      	btns:{
+	      		confirm:false,
+	      		cancel:false
+	      	},
+	      	confirmCallback:'',
+	      	confirmCallbackObj:{}
+	    	},				
 				dataList:''
 			}
 		},
 		methods:{
-		  	delet(id){
+		//弹窗调用
+				alertDataShow(type='loading',message='',show=true,confirm=false,cancel=false,Callback='',Obj={}){
+					this.alertData={
+		                type:type,
+		                isShow: show,
+		                message:message,
+				      	btns:{
+				      		confirm:confirm,
+				      		cancel:cancel
+				      	},                
+		            confirmCallback:Callback,	
+		            confirmCallbackObj:Obj	
+					}
+			  },			
+				delet(id){
+					this.alertDataShow('warning','确定删除吗?',true,true,true,this.deletCallback,{id:id})
+				},
+		  	deletCallback(obj){
 		  	  	this.$http.ajax(res=>{
 		  	  		if(!res.success)return;
-		  	  		console.log('删除成功')
-		  	  		this.getData();
-		  	  	},'api/admin/delete-movie',{id:id},'GET')
+		  	  		this.alertDataShow('success','删除成功',true,true,false,this.getData,{})
+		  	  	},'api/admin/delete-movie',{id:obj.id},'GET')
 		  	},			
 			getData(){
 				this.$http.ajax(res=>{
 					if(res.success==1){
 						this.dataList=res.data
+						this.alertData.isShow=false;
 					}
 				},'api/admin/get-list',{},'GET')
 			}

@@ -3,6 +3,7 @@ var router = express.Router();
 var movieModel=require('../model/movie.js')
 /* GET home page. */
 router.all('*', function(req, res, next) {
+	console.log('this is lochost 8888')
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Content-Type', 'application/x-www-form-urlencoded');
     next();

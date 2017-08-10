@@ -8,7 +8,7 @@ var mongoose = require('mongoose');
 
 var index = require('./routes/index');
 var admin = require('./routes/admin');
-
+var user  = require('./routes/user')
 var app = express();
 
 // view engine setup
@@ -27,6 +27,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/api/movie', index);
 app.use('/api/admin', admin);
+app.use('/api/user', user);
 
 mongoose.connect('mongodb://localhost:27017/movie',(err)=>{
 	if(err){

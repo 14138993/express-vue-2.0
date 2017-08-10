@@ -67,20 +67,39 @@
 			</div>																						
 			<div class="button">
 				<button class="btn btn-success" @click='save()'>保存</button>
-				<button class="btn btn-default ">取消</button>
+				<button class="btn btn-default" @click='$router.go(-1)'>取消</button>
 			</div>
 		</div>
+		<alert
+			:alert-data='alertData'
+			@alertCallback='alertData.confirmCallback'
+		></alert>
 	</div>
 </template>
 <script>
+import Alert from '../../components/alert'
 export default {
+  components:{
+  	Alert
+  },
   data () {
     return {
+      alertData:{
+      	type:'loading',
+      	isShow:false,
+      	message:'',
+      	btns:{
+      		confirm:true,
+      		cancel:true
+      	},
+      	confirmCallback:'',
+      	confirmCallbackObj:{}
+      },
       dataList: [],
 			// form: {
 			// 		id:this.$route.query.movie_id,
 		 //      title: '机械战警',
-			// 	  Doctor: '何塞.帕蒂里亚',
+			// 	  doctor: '何塞.帕蒂里亚',
 			// 	  country: '美国',
 			// 	  language: '英语',
 			// 	  year: '2014',
@@ -103,20 +122,41 @@ export default {
     }
   },
   methods:{
+		//弹窗调用
+		alertDataShow(type='loading',message='',show=true,confirm=false,cancel=false,Callback='',Obj={}){
+			this.alertData={
+                type:type,
+                isShow: show,
+                message:message,
+		      	btns:{
+		      		confirm:confirm,
+		      		cancel:cancel
+		      	},                
+                confirmCallback:Callback,	
+                confirmCallbackObj:Obj	
+			}
+	  },
+  	  alertConfirm(){
+  	  	this.$router.push('/list')
+  	  },
   	  getData(id){
+  	  		this.alertDataShow('loading')
   			this.$http.ajax(res=>{
   				if(!res.success)return;
   					this.form=res.data;
   					this.form.id=this.form._id;
-  					console.log(this.form)
+  					this.alertData.isShow=false;	
   			},"/api/admin/save-updata-movie",{id:id},'GET')  	  	
   	  },
-  		save(){
+  	  save(){
+  	  		let msg=this.$route.query.movie_id ? '编辑成功' : '新增成功';
+ 			this.alertDataShow('loading')
   			var _this=this;
   			this.$http.ajax(res=>{
-  					_this.$route.go({name:'/list'})
+  					this.alertDataShow('success',msg,true,true,false,this.alertConfirm);
+  					// _this.$route.go({name:'/list'})
   			},"/api/admin/save-movie",this.form)
-  		}
+  	  }
   },
   mounted(){
   	if(this.$route.query.movie_id){
