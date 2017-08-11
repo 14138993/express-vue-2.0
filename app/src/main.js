@@ -1,5 +1,3 @@
-// The Vue build version to load with the `import` command
-// (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 import App from './App'
 import router from './router'
@@ -7,6 +5,28 @@ import axios  from 'axios'
 import Http from './http/index'
 import Events from './bus/index'
 import store from './vuex/store'
+
+import Validator from 'vue-validator'
+
+Vue.use(Validator);
+//注册自定义内容
+// 通用方法/组件
+import Common from './commons/global/common'
+Vue.use(Common)
+// 暂无自定义全局指令
+// import directive from './commons/global/directive.js'
+// Vue.use(directive)
+
+// 自定义全局过滤器
+import filter from './commons/global/filter'
+Vue.use(filter)
+// 自定义的全局验证
+import validator from './commons/global/validator'
+Vue.use(validator)
+
+
+
+
 const $axios = axios.create({
     baseURL: 'http://localhost:8888',
     timeout: 5000,

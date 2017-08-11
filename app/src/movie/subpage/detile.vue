@@ -21,10 +21,15 @@
 			</dl>
 		</div>
 	</div>	
+	<comment></comment>
 </div>
 </template>
 <script>
+import comment from './comment.vue'
 	export default{
+		components:{
+			comment
+		},
 		data(){
 			return {
 				dataList:''

@@ -1,4 +1,11 @@
-
+<style>
+	*{
+		padding: 0;
+		margin: 0;
+		list-style: none;
+		text-decoration: none;
+	}
+</style>
 <template>
   <div id="app">
   	<heads :nav-list='navList'/>
