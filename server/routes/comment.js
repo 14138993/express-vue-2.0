@@ -15,17 +15,23 @@ router.post('/save-comment',(req,res,next)=>{
 	var Comment;
 	if(commentObj.comment_id){
 		CommentModel.findById(commentObj.comment_id,(err,data)=>{
-			commentObj.send_time=new Date.now();
+			commentObj.send_time=Date.now();
 			data.replay.push(commentObj)
-			data.save({
-				data:true,
-				success:1,
-				url:req.url
+			data.save((err,data)=>{
+				res.json({
+					data:true,
+					success:1,
+					url:req.url
+				})				
 			})
 		})
 	}else{
 		Comment=new CommentModel(commentObj)
-		CommentModel.save((err,data)=>{
+		Comment.save((err,data)=>{
+			if(err){
+				console.log(err)
+				res.json({err})
+			}
 			res.json({
 				data:true,
 				success:1,
@@ -34,3 +40,4 @@ router.post('/save-comment',(req,res,next)=>{
 		})
 	}
 })
+module.exports = router;

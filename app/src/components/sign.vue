@@ -20,7 +20,7 @@
 
 </style>
 <template>
-	<div class="sign" v-if='isOpen'>
+	<div class="sign">
 		<modal>
 			<h3  slot="header">{{titleText}}</h3>
 			<div  slot="body">
@@ -87,8 +87,10 @@ import {mapActions,mapState} from 'vuex'
 				this.sing.isAdmin=this.sing.isAdmin ? 1 :0;
 				this.$http.ajax(res=>{
 					if(!res.sccuess)return;
-					if(this.title==2)this.user=res.data;	
-					this.$emit('logins',res.data)	
+					if(this.title==2){
+						this.user=res.data
+						this.$emit('logins',res.data)	
+					};	
 					this.sing.userName=this.sing.password=''
 					this.sing.isAdmin=0					
 				},this.api,this.sing)				

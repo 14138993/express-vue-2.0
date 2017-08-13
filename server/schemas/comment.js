@@ -1,6 +1,6 @@
-var mongoose = require('mongoose')
-var Schema  =  mongoose.Schema
-var ObjectId = Schema.Types.ObjectId,
+var mongoose = require('mongoose');
+var Schema  =  mongoose.Schema;
+var ObjectId = Schema.Types.ObjectId;
 var CommentSchema= new Schema({
 	from:{
 		type:ObjectId,
@@ -12,7 +12,7 @@ var CommentSchema= new Schema({
 	},
 	movie:{
 		type:ObjectId,
-		ref:'Movie'		
+		ref:'Moviemsg'		
 	},
 	praise_count:{
 		type:Number,
@@ -36,12 +36,10 @@ var CommentSchema= new Schema({
 			send_time:String,			
 		}],
 	send_time:String,	
-})
+});
 
-CommentSchema.par('save',next=>{
-	if(this.isNew){
-		this.send_time=Date.now();
-	}
+CommentSchema.pre('save',function(next){
+	this.send_time=Date.now()
 	next()
 })
 

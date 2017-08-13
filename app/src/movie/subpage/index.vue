@@ -1,19 +1,39 @@
 <style></style>
+<style lang='scss' scoped>
+	.panel-heading{
+		text-align: left;
+	}
+	img{
+		max-height: 230px;
+	}
+</style>
 <template>
 	<div id="content_mian">
-		
 		<div class="container">
 			<div class="row">
-				<div class="col-md-2" v-for='item in dataList'>
-					<router-link :to="{ path: 'detile', query: { id:item._id}}">
-						<img :src="item.url" width="100%" height='100%' alt="">
-						<p class="caption">
-							<h3>{{item.title}}</h3>
-							<p>
-								<router-link :to="{ path: 'detile', query: { id:item._id}}" class='btn btn-primary'>观看预告片</router-link>
-							</p>
-						</p>
-					</router-link>
+			  <div class="cil-md-12">
+			    <template v-for='items in dataList'>
+			  	<div class="panel panel-default">
+			  		<div class="panel-heading clearfix">
+			  			<h3>{{items.name}}</h3>
+			  		</div>
+			  	</div>
+			  	<div class="panel-body" v-show='items.movies.length > 0'>
+			  		<div class="row">
+							<div class="col-md-3" v-for='item in items.movies'>
+								<router-link :to="{ path: 'detile', query: { id:item._id}}" class='thumbnail'>
+									<img :src="item.url" width="100%"  alt="">
+									<p class="caption">
+										<h3>{{item.title}}</h3>
+										<p>
+											<router-link :to="{ path: 'detile', query: { id:item._id}}" class='btn btn-primary'>观看预告片</router-link>
+										</p>
+									</p>
+								</router-link>
+							</div>
+						</div>
+					</div>
+					</template>
 				</div>
 			</div>	
 		</div>
@@ -46,7 +66,8 @@ import {mapState,mapActions,mapGetters} from 'vuex'
 			getData(){				
 				this.$http.ajax(res=>{
 					if(!res.success)return;
-					this.dataList=res.data;					
+					this.dataList=res.data;		
+					console.log(res.data)			
 				},'api/movie/get-home-list',{},'GET')
 			}
 		},

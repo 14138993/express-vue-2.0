@@ -2,12 +2,14 @@ class Http {
 	constructor(http){		
 		this.http=http;	
 	}
-	ajax(callback,url,data,methods='POST'){
+	ajax(callback,url,data,methods='POST',datatype='json'){
 	this.http({
          type: methods,
          url: url,
          data:data,
-         dataType: "json",
+         dataType: datatype,
+         crossDomain:true,
+         jsonp:'callback',
          success: function(data){
          	callback&&callback(data)
          }		

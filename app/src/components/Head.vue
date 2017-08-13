@@ -70,13 +70,15 @@
             <li class="dropdown" v-if='userMsg.isAdmin==1'>
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">后台管理 <span class="caret"></span></a>
               <ul class="dropdown-menu"  style="right: -85px;width:184px;">
-                  <router-link to="/admin"  tag='li' class='nav_li'><a href="#">录入页</a></router-link>
+                  <router-link to="/" tag='li' exact class='nav_li'><a href="#">首页</a></router-link>              
+                  <router-link to="/admin"  tag='li' class='nav_li'><a href="#" class="dropdown-toggle">录入页</a></router-link>
                   <router-link to="/list" tag='li' class='nav_li'><a href="#">列表页</a></router-link>
-                  <router-link to="/" tag='li' exact class='nav_li'><a href="#">个人中心</a></router-link>
+                  <router-link to="/category" tag='li' class='nav_li'><a href="#">分类页</a></router-link>
               </ul>
             </li>
             <li class="dropdown" v-if='userMsg.isAdmin==0'>
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">个人中心 <span class="caret"></span></a>
+              <router-link to="/" tag='li' exact class='nav_li'><a href="#">首页</a></router-link>
+              <router-link to="/user" tag='li' exact class='nav_li'><a href="#">个人中心</a></router-link>
             </li>            
           </ul>
           <div class="img">
@@ -91,6 +93,7 @@
       </div>
     </nav>
     <sign
+      v-if='isopen'
       :title='Index'
       @logins='getUser'
     ></sign>
@@ -111,7 +114,8 @@ export default {
     data () {
       return {
         Index:1,
-        userMsg:''
+        userMsg:'',
+        isopen:false,
       }
     },
     computed:{
@@ -127,6 +131,7 @@ export default {
          },'api/user/get-logout',{})
       },
       open(index){
+         this.isopen=true
          this.Index=index
          this.$store.dispatch('user/openModel')
       }

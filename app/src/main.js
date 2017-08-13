@@ -46,18 +46,22 @@ Vue.prototype.EventBus = Events; //将bus通信挂载到原型上便于使用
 //获取session及路由权限控制
 router.beforeEach((to, from, next) => {
     var routeNames=['movieIndex','detileIndex','errorIndex']; 
-    http.ajax(res=>{
-        Vue.prototype.user=res.data; //将登录的信息挂载到原型其他页面能够直接使用
-        if(routeNames.indexOf(to.name)!==-1){
-            next();  
-        }else{
-              if(res.data&& res.data.isAdmin==1){
-                  next()
-              }else{
-                next('/error')
-              }                  
-        }   
-    },'api/user/get-session',{})  
+    if(!Vue.prototype.user){
+      http.ajax(res=>{
+          Vue.prototype.user=res.data; //将登录的信息挂载到原型其他页面能够直接使用
+          if(routeNames.indexOf(to.name)!==-1){
+              next();  
+          }else{
+                if(res.data&& res.data.isAdmin==1){
+                    next()
+                }else{
+                  next('/error')
+                }                  
+          }   
+      },'api/user/get-session',{}) 
+    }else{
+      next();
+    } 
 })
 /* eslint-disable no-new */
 new Vue({

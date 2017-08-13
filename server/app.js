@@ -11,7 +11,8 @@ var mongoose = require('mongoose');
 
 var index = require('./routes/index');
 var admin = require('./routes/admin');
-var user  = require('./routes/user')
+var user  = require('./routes/user');
+var comment = require('./routes/comment')
 var app = express();
 
 // view engine setup
@@ -44,7 +45,7 @@ app.use(session({
 app.use('/api/movie', index);
 app.use('/api/admin', admin);
 app.use('/api/user',  user);
-
+app.use('/api/comment',comment);
 mongoose.connect(dbUrl,(err)=>{
 	if(err){
 		console.log('数据库连接失败')

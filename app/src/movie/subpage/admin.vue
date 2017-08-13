@@ -1,6 +1,28 @@
+<style lang='scss' scoped>
+	.category{
+		margin: 0;
+		input{
+			position: relative;
+		    top: -3px;
+		    margin-right: 5px;
+		}
+		label{
+			padding: 0;
+			width: 15%;
+		}
+	}
+</style>
 <template>
 	<div class="container">
 		<div class="row">
+			<div class="form-group"  style='height:35px'>
+				<label  for="inputdouban" class="col-sm-2 control-label">
+				 同步豆瓣电影
+				</label>
+					<div class="col-sm-9">
+						<input type="text" id="inputdouban" placeholder="请输入要同步的豆瓣电影id" class="form-control" v-model="synchronization_id" @blur='synchronization'>
+					</div>				
+			</div>		
 			<div class="form-group"  style='height:35px'>
 				<label  for="#inputTitle" class="col-sm-2 control-label">
 				电影名字
@@ -9,6 +31,24 @@
 						<input type="text" id="#inputTitle" class="form-control" v-model="form.title">
 					</div>				
 			</div>
+			<div class="form-group category"  style='height:35px'>
+				<label  for="#inputCategory" class="col-sm-2 control-label">
+				电影类型
+				</label>
+					<div class="col-sm-9" >
+						<label v-for='(item,index) in categorys' :for="'inputCategory'+index" class="col-sm-2 control-label" >
+							<input type="radio" name='category' :id="'inputCategory'+index" :value="item._id" class="radio-inline" v-model="form.category">{{item.name}}
+						</label>					
+					</div>				
+			</div>	
+			<div class="form-group"  style='height:35px' v-if='form.category == 3'>
+				<label  for="inputcategorys" class="col-sm-2 control-label">
+				自定义分类名
+				</label>
+					<div class="col-sm-9">
+						<input type="text" id="inputcategorys" class="form-control" v-model="form.category_name">
+					</div>				
+			</div>					
 			<div class="form-group"  style='height:35px'>
 				<label  for="#inputDoctor" class="col-sm-2 control-label">
 				导演
@@ -95,6 +135,8 @@ export default {
       	confirmCallback:'',
       	confirmCallbackObj:{}
       },
+      synchronization_id:'',
+      categorys:[],
       dataList: [],
 			// form: {
 			// 		id:this.$route.query.movie_id,
@@ -109,8 +151,9 @@ export default {
 			// 	  ren: '小猪猪' 
 			// } 
 			form: {
-					id:this.$route.query.movie_id,
-		      title: '',
+				  category:'',
+				  id:this.$route.query.movie_id,
+		      	  title: '',
 				  doctor: '',
 				  country: '',
 				  language: '',
@@ -118,6 +161,7 @@ export default {
 				  summary: '',
 				  url: '',
 				  flash: '',
+				  category_name:'',
 			} 			  
     }
   },
@@ -136,9 +180,41 @@ export default {
                 confirmCallbackObj:Obj	
 			}
 	  },
+	  synchronization(){
+	  	if(!this.synchronization_id)return;
+	  	this.$http.ajax(data=>{
+	  				var doctorsArray = data.directors.map(item=>{
+	  					 return item.name
+	  				});
+	  				console.log()
+	  				console.log(data.title)
+					var doctor = doctorsArray.join('/');
+					console.log(doctor)
+					// this.from.category=data.genres,
+			      	this.form.title=data.title;
+					this.form.doctor=doctor;
+					this.form.country=data.countries.join('/');
+					this.form.year=data.year;
+					this.form.summary=data.summary;
+					this.form.url=data.images.large;
+	  	},`https://api.douban.com/v2/movie/subject/${this.synchronization_id}`,{id:this.synchronization_id},'get','jsonp')
+
+	  },
   	  alertConfirm(){
-  	  	this.$router.push('/list')
+  	  		this.$router.push('/list')
   	  },
+	  getCatrgory(){
+			this.$http.ajax(res=>{
+				if(res.success==1){
+					console.log(res.data)
+					this.categorys=res.data
+					this.categorys.push({
+						name:'自定义',
+						_id:3
+					})
+				}
+			},'api/admin/get-category-list',{},'GET')
+	  },  	  
   	  getData(id){
   	  		this.alertDataShow('loading')
   			this.$http.ajax(res=>{
@@ -151,6 +227,7 @@ export default {
   	  save(){
   	  		let msg=this.$route.query.movie_id ? '编辑成功' : '新增成功';
  			this.alertDataShow('loading')
+ 			this.form.category == 3 ? '' : delete  this.form.category_name;
   			var _this=this;
   			this.$http.ajax(res=>{
   					this.alertDataShow('success',msg,true,true,false,this.alertConfirm);
@@ -162,6 +239,7 @@ export default {
   	if(this.$route.query.movie_id){
   		this.getData(this.$route.query.movie_id);
   	}
+  	this.getCatrgory()
   }
 }
 </script>

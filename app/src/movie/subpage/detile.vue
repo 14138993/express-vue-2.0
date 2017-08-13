@@ -21,7 +21,10 @@
 			</dl>
 		</div>
 	</div>	
-	<comment></comment>
+	<comment 
+		:datas='comment_content'
+		@saveCallback='getData'
+	></comment>
 </div>
 </template>
 <script>
@@ -32,14 +35,19 @@ import comment from './comment.vue'
 		},
 		data(){
 			return {
-				dataList:''
+				dataList:'',
+				comment_content:[],
+				alert:{
+					sunm:1
+				},
 			}
 		},
 		methods:{
 			getData(id){
 				this.$http.ajax(res=>{
 					if(!res.success)return;
-					this.dataList=res.data;
+					this.dataList=res.data.movie;
+					this.comment_content=res.data.comment;
 				},'api/movie/get-detile',{id:id},'GET')
 			}
 		},

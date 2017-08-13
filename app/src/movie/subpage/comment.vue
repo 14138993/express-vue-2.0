@@ -120,18 +120,20 @@ html {
 <div id="mains">
 	<div id="list">
 		<ul>
-			<li>
+			<li v-for='(item,index) in datas'>
 						<div class="po-avt-wrap">
-							<img class="po-avt" src="images/n5.jpg">
+							<a href="#comment" @click='comment_add_replay(item._id,item.from._id,item.from.userName)'>
+                                <img class="po-avt" src="images/n5.jpg">                     
+                            </a>
 						</div>
 						<div class="po-cmt">
 							<div class="po-hd">
 								<p class="po-name">
-									王思聪
+									{{item.from.userName}}
 								</p>
 								<div class="post">
 									<p>
-										那一年这兄弟三人发誓一定要出人头地
+										{{item.content}}
 									</p>
 			<!-- 						<img class="list-img" src="images/xa1.jpg" style="height: 80px;">
 									<img class="list-img" src="images/ma1.jpg" style="height: 80px;">
@@ -141,27 +143,67 @@ html {
 									1分钟前
 								</p>
 							</div>
-							<div class="r"></div>
-							<div class="cmt-wrap">
-								<div class="like">
-									<img src="images/l.png">
-									鹿晗，林更新，杨幂，angelababy，范冰冰...
-								</div>
-								<div class="cmt-list">
-									<p><span>鹿晗：</span>赞！</p>
-									<p><span>习</span>回复<span class="data-name">某某科技~贾素杰</span><span>：</span>好几天没见，我们该聚聚了</p>
-								</div>
-							</div>
+                            <template v-if='item.replay.length > 0'>
+    							<div class="r"></div>
+    							<div class="cmt-wrap" v-for='(items,index) in item.replay'>
+    								<div class="like">
+    									<img src="images/l.png">
+    									<!-- 鹿晗，林更新，杨幂，angelababy，范冰冰... -->
+    								</div>
+    								<div class="cmt-list">
+    									<p><span>{{items.from.userName + ':'}}</span>{{items.content}}</p>
+    								</div>
+    							</div>
+                            </template>
 						</div>
 					</li>
 			</ul>
 	</div>
 	<div class="save_comment">
 	  <p class="title">我也说两句：</p>
-	  <textarea class="form-control" rows="3"></textarea>
+	  <textarea class="form-control" rows="3" @keyup.enter='save'  :placeholder="placeholder" v-model='body.content' id="comment"></textarea>
       <div class="button">
-        <button class="btn  btn-primary">提交评论</button>                 
+        <button class="btn  btn-primary" @click='save'>提交评论</button>
+        <button class="btn  btn-default" @click='cleaReplay'>取消</button>                 
       </div>	
 	</div>
 </div>	
 </template>
+<script>   
+    export default {
+        props:{
+            datas:'',
+        },
+        data(){
+            return {
+                body:{
+                    content:'',
+                },
+                placeholder:'请输入评论:',
+            }
+        },
+        methods:{
+            cleaReplay(){
+                this.body.content='';
+                delete this.body.comment_id;
+                delete this.body.to
+                this.placeholder='请输入评论:'          
+            },
+            comment_add_replay(cid,tid,name){
+                this.body.comment_id=cid;
+                this.body.to=tid;
+                this.placeholder=`回复${name}:`
+            },
+            save(){
+                this.body.from=this.user.staff_id;
+                this.body.movie=this.$route.query.id;
+                this.$http.ajax(res=>{  
+                     this.cleaReplay(); 
+                     this.$emit('saveCallback',this.$route.query.id) 
+                },'api/comment/save-comment',this.body)
+            }
+        },
+        mounted(){
+        }
+    }
+</script>
