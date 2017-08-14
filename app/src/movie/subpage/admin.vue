@@ -181,7 +181,7 @@ export default {
 			}
 	  },
 	  synchronization(){
-	  	if(!this.synchronization_id)return;
+	  	if(!this.synchronization_id)return;	
 	  	this.$http.ajax(data=>{
 	  				var doctorsArray = data.directors.map(item=>{
 	  					 return item.name

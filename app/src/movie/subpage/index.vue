@@ -1,21 +1,46 @@
-<style></style>
+
 <style lang='scss' scoped>
 	.panel-heading{
 		text-align: left;
 	}
 	img{
-		max-height: 230px;
+		max-height: 250px;
+	}
+	.more{
+		float: right;
+		display: inline-block;
+		width: 60px;
+		height: 20px;
+		background: url('../../assets/image/more.png') right no-repeat ;
+		background-size: 60px;
+	}
+	.thumbnail{
+		min-height: 385px;
+	}
+	.left{
+		float:left;
+	}
+	.paddings{
+		padding: 0;
 	}
 </style>
 <template>
 	<div id="content_mian">
-		<div class="container">
+		<div class="container clearfix paddings">
+	      <div class="navbar-form left paddings">
+	        <div class="form-group">
+	          <input type="text" class="form-control " v-model='seaceName' placeholder="请输入电影名称">
+	        </div>
+	        <button type="submit" class="btn btn-default" @click='seace()'>搜索</button>
+	      </div>				
+		</div>
+		<div class="container" v-show='!moreShow'>
 			<div class="row">
 			  <div class="cil-md-12">
 			    <template v-for='items in dataList'>
 			  	<div class="panel panel-default">
 			  		<div class="panel-heading clearfix">
-			  			<h3>{{items.name}}</h3>
+			  			<h3 class="title">{{items.name}}<span class="more" @click='seace(items._id,items.name)'></span></h3>
 			  		</div>
 			  	</div>
 			  	<div class="panel-body" v-show='items.movies.length > 0'>
@@ -37,16 +62,29 @@
 				</div>
 			</div>	
 		</div>
+		<more 
+		v-if='moreShow'
+		:more-api='moreApi'
+		></more>
 	</div>	
 </template>
 <script>
+import more from '../comments/more.vue'
 import {mapState,mapActions,mapGetters} from 'vuex'
 	export default {
 		components:{
+			more,
 		},
 		data(){
 			return {
+				seaceName:'',
 				dataList:'',
+				moreApi:{
+					query:{},
+					url:'',
+					name:''
+				},
+				moreShow:false,
 			}
 		},
 	    computed: {
@@ -63,6 +101,17 @@ import {mapState,mapActions,mapGetters} from 'vuex'
 				'openModel',
 				"close"
 			]),
+			seace(id,name){
+				this.moreShow=true;
+				if(id){
+					this.moreApi.url='api/movie/get-result';
+					this.moreApi.query.cid=id
+					this.moreApi.name=name;
+				}else{				
+					this.moreApi.url='api/movie/seace-result	'
+					this.moreApi.query.seaceName=this.moreApi.name=this.seaceName;
+				}
+			},
 			getData(){				
 				this.$http.ajax(res=>{
 					if(!res.success)return;

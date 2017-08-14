@@ -56,15 +56,7 @@
           </button>
           <a class="navbar-brand" href="#">title</a>
         </div>
-
-        <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" v-if='userMsg'>
-<!--           <form class="navbar-form navbar-left">
-            <div class="form-group ">
-              <input type="text" class="form-control " placeholder="请输入电影名称">
-            </div>
-            <button type="submit" class="btn btn-default">搜索</button>
-          </form> -->
           <button type="submit" class="btn btn-danger del navbar-right margin" @click='logout'>注销</button>          
           <ul class="nav navbar-nav navbar-right">
             <li class="dropdown" v-if='userMsg.isAdmin==1'>
@@ -122,8 +114,8 @@ export default {
     },
     methods:{
       getUser(user){
-        console.log(user)
         this.userMsg=user
+        this.isopen=false
       },
       logout(){
          this.$http.ajax(res=>{

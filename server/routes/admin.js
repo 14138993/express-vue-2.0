@@ -82,7 +82,7 @@ router.post('/save-movie', categoryCustom,function(req, res, next) {
 			categoryOldId=movies.category;
 			_movie = Object.assign(movies, req.body)
 			_movie.save((err,movie)=>{
-				if(categoryOldId.toString() == req.body.category){
+				if(categoryOldId&&categoryOldId.toString() == req.body.category.toString()){
 					//内容信息修改但是分类信息没有修改不再操作分类
 				}else{
 					//此分类添加此电影
