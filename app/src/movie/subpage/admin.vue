@@ -15,6 +15,7 @@
 <template>
 	<div class="container">
 		<div class="row">
+		<upload></upload>
 			<div class="form-group"  style='height:35px'>
 				<label  for="inputdouban" class="col-sm-2 control-label">
 				 同步豆瓣电影
@@ -107,7 +108,14 @@
 							<span id="progress">0</span>
 							<img id="image" src="" width="200" />
 					</div>				
-			</div>			
+			</div>	
+			<div class="form-group"  style='height:35px'>
+				<label  for="#inputurl" class="col-sm-2 control-label">
+				海报
+				</label>
+							<img id="image" src="http://localhost:8888/images/1502802052308.png" width="200" />
+								
+			</div>						
 			<div class="form-group"  style='height:35px'>
 				<label  for="#inputflash" class="col-sm-2 control-label">
 				播放地址
@@ -125,14 +133,17 @@
 			:alert-data='alertData'
 			@alertCallback='alertData.confirmCallback'
 		></alert>
+
 	</div>
 </template>
 <script>
 import fileup from '../../assets/js/fileup.js'
 import Alert from '../../components/alert'
+import upload from '../../components/upload/index.vue'
 export default {
   components:{
-  	Alert
+  	Alert,
+  	upload
   },
   data () {
     return {

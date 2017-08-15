@@ -1,9 +1,9 @@
 
 var upfile=function(){
- var file = document.querySelector('#file');
-	 var upload = document.querySelector('#upload');
-	 var progress = document.querySelector('#progress');
-	 var image = document.querySelector('#image');
+ var file = document.getElementById('file');
+	 var upload = document.getElementById('upload');
+	 var progress = document.getElementById('progress');
+	 var image = document.getElementById('image');
 	 var xhr = new XMLHttpRequest();
 	 upload.addEventListener('click', uploadFile, false);
 	 file.addEventListener('change', previewImage, false);
@@ -11,10 +11,13 @@ var upfile=function(){
 	 // 点击上传
 	 function uploadFile(event) {
 	 var formData = new FormData();
-	 formData.append('test-upload', file.files[0]);
+	 formData.append('upfile', file.files[0]);
+	 console.log(file.files)
+	 console.log(formData)
+	 
 	 xhr.onload = uploadSuccess;
 	 xhr.upload.onprogress = setProgress;
-	 xhr.open('post', 'api/admin/set-upload', true);
+	 xhr.open('post', 'api/admin/set-upload/poster', true);
 	 xhr.send(formData);
 	 }
 	 
