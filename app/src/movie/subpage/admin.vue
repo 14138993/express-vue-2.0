@@ -98,6 +98,17 @@
 					</div>				
 			</div>
 			<div class="form-group"  style='height:35px'>
+				<label  for="#inputurl" class="col-sm-2 control-label">
+				上传海报地址
+				</label>
+					<div class="col-sm-9">
+							<input type="file" name="file" id="file" />
+							<button id="upload">上传</button>
+							<span id="progress">0</span>
+							<img id="image" src="" width="200" />
+					</div>				
+			</div>			
+			<div class="form-group"  style='height:35px'>
 				<label  for="#inputflash" class="col-sm-2 control-label">
 				播放地址
 				</label>
@@ -117,6 +128,7 @@
 	</div>
 </template>
 <script>
+import fileup from '../../assets/js/fileup.js'
 import Alert from '../../components/alert'
 export default {
   components:{
@@ -240,6 +252,7 @@ export default {
   		this.getData(this.$route.query.movie_id);
   	}
   	this.getCatrgory()
+  	fileup()
   }
 }
 </script>

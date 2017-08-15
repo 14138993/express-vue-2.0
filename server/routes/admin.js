@@ -4,6 +4,10 @@ var _=require('underscore');
 const querystring = require('querystring');
 var movieModel=require('../model/movie.js')
 var categoryModel=require('../model/category.js')
+var path = require('path');
+var fs = require('fs');
+var multipart = require('connect-multiparty');
+// var multipartMiddleware = multipart();//格式上传数据
 //将自定义分类剥离成中间件
 var {categoryCustom} = require ('../comments/index.js');
 
@@ -18,7 +22,29 @@ router.all('*', function(req, res, next) {
     // res.header("Content-Type", "application/json;charset=utf-8");
     next();
 });
-
+router.post('/set-upload',(req,res,next)=>{
+    var form = new multipart.Form();
+    form.parse(req, function (err, fields, files) {
+       console.log(fields);
+       res.json(fields)
+    });
+	// console.log(req)
+ //    var posterData = req.files.upfile
+ //    console.log(posterData)
+ //    var filePath = posterData.path
+ //    var originalFilename = posterData.originalFilename
+ //    if(originalFilename){
+ //    	fs.readFile(filePath,(err,data)=>{
+ //    		var timeStamp=Date.now()
+ //    		var type=posterData.type.split('/')[1]
+ //    		var newname=timeStamp+'.'+type
+ //    		var newPath=path.join(__dirname,'../','/public/images/'+newname)
+ //    		fs.writeFile(newPath,data,(err,data)=>{
+ //    			req.body.uru
+ //    		})
+ //    	})
+ //    }
+})
 //获取单个电影数据
 router.get('/save-updata-movie',function(req,res,next){
 	  if(!req.query.id){
