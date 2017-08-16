@@ -10,6 +10,12 @@ router.all('*', function(req, res, next){
     next();
 });
 
+router.get('/delet-comment',(req,res,next)=>{
+	CommentModel.findById(req.query.id,(err,comment)=>{
+		  console.log(comment)
+		  res.json(1)
+	})
+})
 router.post('/save-comment',(req,res,next)=>{
 	var commentObj=req.body;
 	var Comment;

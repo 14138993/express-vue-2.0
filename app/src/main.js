@@ -46,9 +46,10 @@ Vue.prototype.EventBus = Events; //将bus通信挂载到原型上便于使用
 //获取session及路由权限控制
 router.beforeEach((to, from, next) => {
     var routeNames=['movieIndex','detileIndex','errorIndex']; 
-    if(!Vue.prototype.user){
+    if(!store.state.user.userMsg){
       http.ajax(res=>{
-          Vue.prototype.user=res.data; //将登录的信息挂载到原型其他页面能够直接使用
+          // Vue.prototype.user=res.data; 
+          store.dispatch('user/updataUser',res.data) //将登录的信息报存到vuex
           if(routeNames.indexOf(to.name)!==-1){
               next();  
           }else{

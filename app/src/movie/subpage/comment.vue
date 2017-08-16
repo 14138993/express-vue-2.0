@@ -135,6 +135,7 @@ html {
 									<p>
 										{{item.content}}
 									</p>
+                                    <p @click='delet(item._id)'>删除</p>
 			<!-- 						<img class="list-img" src="images/xa1.jpg" style="height: 80px;">
 									<img class="list-img" src="images/ma1.jpg" style="height: 80px;">
 									<img class="data-avt list-img" src="images/0.jpg" style="height: 80px;"> -->
@@ -152,6 +153,7 @@ html {
     								</div>
     								<div class="cmt-list">
     									<p><span>{{items.from.userName + ':'}}</span>{{items.content}}</p>
+                                        <P @click='delet(items._id)'>删除</P>
     								</div>
     							</div>
                             </template>
@@ -170,6 +172,7 @@ html {
 </div>	
 </template>
 <script>   
+import {mapState} from 'vuex'
     export default {
         props:{
             datas:'',
@@ -182,7 +185,18 @@ html {
                 placeholder:'请输入评论:',
             }
         },
+        computed:{
+            ...mapState('user',{
+                user:state=>state.userMsg
+            })
+        },
         methods:{
+            delet(id){
+                console.log(id)
+                this.$http.ajax(res=>{
+
+                },'api/comment/delet-comment',{id:id},'GET')
+            },
             cleaReplay(){
                 this.body.content='';
                 delete this.body.comment_id;

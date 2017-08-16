@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var UserModel=require('../model/user.js')
-
+var _=require('underscore');
 router.all('*', function(req, res, next){
 	console.log('this is lochost 8888')
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -9,13 +9,18 @@ router.all('*', function(req, res, next){
     next();
 });
 
+
 router.post('/get-session',(req,res,next)=>{
 	var data,_user=req.session.user;
+	console.log(req.session.user)
 	if(_user){
 		data={
 			staff_name:_user.userName,
 			isAdmin:_user.isAdmin,
-			staff_id:_user._id		
+			staff_id:_user._id,
+			img:_user.img,
+			tel:_user.tel,
+			email:_user.email	
 		}
 	}
 	res.json({
@@ -29,6 +34,35 @@ router.post('/get-logout',(req,res,next)=>{
 		data:true,
 		sccuess:1		
 	})
+})
+router.post('/updata-user',(req,res,next)=>{
+	var user=req.body;
+		UserModel.findByIdAndUpdate({_id:user._id},user,(err,userdata)=>{
+			if(err){
+				console.log(err)
+			}
+			console.log(userdata)
+			res.json({
+				data:userdata,
+				success:1
+			})
+		})
+	// UserModel.findName(req.body.userName,(err,userdata)=>{
+	// 	 if(err){
+	// 	 	console.log(err)
+	// 	 }
+	// 	 userdata.updata-u
+	// 	 user=_.extend(req.body,userdata);
+	// 	 user.save((err,data)=>{
+	// 	 	if(err){
+	// 	 		console.log(err)
+	// 	 	}
+	// 	 	res.json({
+	// 	 		data:data,
+	// 	 		success:1
+	// 	 	})
+	// 	 })
+	// })
 })
 router.post('/get-login',(req,res,next)=>{
 	var userName=req.body.userName;
@@ -45,6 +79,7 @@ router.post('/get-login',(req,res,next)=>{
 			})
 		}else{
 			data.comparePassword(passwprd,(err,isMatch)=>{
+				console.log(data)
 				if(err){
 					return console.log(err)
 				}
@@ -54,7 +89,10 @@ router.post('/get-login',(req,res,next)=>{
 						data:{
 							staff_name:data.userName,
 							isAdmin:data.isAdmin,
-							staff_id:data._id
+							staff_id:data._id,
+							img:data.img,
+							tel:data.tel,
+							email:data.email								
 						},
 						sccuess:1							
 					})

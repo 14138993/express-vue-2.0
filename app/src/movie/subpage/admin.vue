@@ -252,7 +252,7 @@ export default {
   		this.getData(this.$route.query.movie_id);
   	}
   	this.getCatrgory()
-  	fileup()
+  	fileup('api/admin/set-upload/poster')
   }
 }
 </script>

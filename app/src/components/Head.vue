@@ -12,10 +12,15 @@
           display: inline-block;
           width:50px;
           height: 40px;
-          background: red;
           position: relative;
           top: 5px;
           float:left;
+          img{
+            max-height: 100%;
+            max-width: 100%;
+            min-width: 100%;
+            min-height: 100%;
+          }
         }
         .name{
           margin-left:20px;
@@ -47,22 +52,14 @@
 <div class="container">
       <nav class="navbar navbar-default">
       <div class="container-fluid">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="#">title</a>
-        </div>
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" v-if='userMsg'>
           <button type="submit" class="btn btn-danger del navbar-right margin" @click='logout'>注销</button>          
           <ul class="nav navbar-nav navbar-right">
             <li class="dropdown" v-if='userMsg.isAdmin==1'>
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">后台管理 <span class="caret"></span></a>
               <ul class="dropdown-menu"  style="right: -85px;width:184px;">
-                  <router-link to="/" tag='li' exact class='nav_li'><a href="#">首页</a></router-link>              
+                  <router-link to="/" tag='li' exact class='nav_li'><a href="#">首页</a></router-link>    
+                  <router-link to="/user" tag='li' exact class='nav_li'><a href="#">个人中心</a></router-link>          
                   <router-link to="/admin"  tag='li' class='nav_li'><a href="#" class="dropdown-toggle">录入页</a></router-link>
                   <router-link to="/list" tag='li' class='nav_li'><a href="#">列表页</a></router-link>
                   <router-link to="/category" tag='li' class='nav_li'><a href="#">分类页</a></router-link>
@@ -74,7 +71,9 @@
             </li>            
           </ul>
           <div class="img">
-            <span class="imgs"></span>
+            <span class="imgs">
+              <img :src="userMsg.img" alt="">
+            </span>
             <span class="name">{{userMsg.staff_name}}</span>
           </div>          
         </div>
@@ -94,6 +93,7 @@
 
 <script>
 import sign from './sign'
+import {mapActions,mapState} from 'vuex'
 export default {
     components:{
        sign
@@ -106,30 +106,38 @@ export default {
     data () {
       return {
         Index:1,
-        userMsg:'',
         isopen:false,
       }
     },
     computed:{
+        ...mapState('user',{
+            userMsg:state=>state.userMsg
+        })
     },
     methods:{
-      getUser(user){
-        this.userMsg=user
+      ...mapActions('user',[
+            'deletUser',
+            'openModel'
+        ]),
+      getUser(){
         this.isopen=false
       },
       logout(){
          this.$http.ajax(res=>{
-            this.userMsg=this.user=false;
+            this.deletUser()
+            var routeNames=['movieIndex','detileIndex','errorIndex']; 
+            if(routeNames.indexOf(this.$route.name)== -1){
+              this.$router.push('/')
+            }
          },'api/user/get-logout',{})
       },
       open(index){
          this.isopen=true
          this.Index=index
-         this.$store.dispatch('user/openModel')
+         this.openModel()
       }
     },
     mounted(){
-      this.userMsg=this.user
     }
 }
 </script>

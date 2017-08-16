@@ -57,7 +57,16 @@ const router = new VueRouter({
                   resolve(require('../movie/subpage/category.vue'));
               },'movie/categoryIndex')
           }
-        },      
+        },
+        {
+          name:'userIndex',
+          path: 'user',
+          component:resolve=>{
+              require.ensure([],require=>{
+                  resolve(require('../movie/subpage/user.vue'));
+              },'movie/userIndex')
+          }
+        },              
       ]
     },
     {
