@@ -19,6 +19,7 @@ Vue.use(Common)
 
 // 自定义全局过滤器
 import filter from './commons/global/filter'
+
 Vue.use(filter)
 // 自定义的全局验证
 import validator from './commons/global/validator'

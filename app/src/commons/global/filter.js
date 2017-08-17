@@ -6,6 +6,9 @@
  // 需要 let xxx = function() ，而不能 let xxx()
  //中文显示时间
 let filter_time=function(dateStr){
+    if(Number(dateStr)){
+        dateStr= formattingTime(dateStr)
+    }
     var publishTime = getDateTimeStamp(dateStr) / 1000,
     d_seconds,d_minutes,d_hours,d_days,d,
     timeNow = parseInt(new Date().getTime() / 1000),            
@@ -41,16 +44,25 @@ let filter_time=function(dateStr){
     }
     //  else if (d_days >= 30) {
     //         return Y + '-' + M + '-' + D + ' ' + H + ':' + m;
-    // }         
+    // }     
+  
     function getDateTimeStamp(dateStr) {
             return Date.parse(dateStr.replace(/-/gi, "/"));
-    }
-    function getTimeSize(time){
-             return time<10?'0'+time:time;
     }　   
 }
-
-
+let getTimeSize = function (time){
+         return time<10?'0'+time:time;
+}　
+let formattingTime = function (val) {
+        var date=new Date(parseInt(val,10)),
+        Y = getTimeSize(date.getFullYear()),
+        M = getTimeSize(date.getMonth() + 1),
+        D = getTimeSize(date.getDate()),
+        H = getTimeSize(date.getHours()),
+        m = getTimeSize(date.getMinutes()),
+        s = getTimeSize(date.getSeconds()); 
+        return Y + '-' + M + '-' + D + ' ' + H + ':'+ m + ':' + s;
+    }  
 // 提交时，trim 内容
 let filter_trim = {
 	read: function(val) {

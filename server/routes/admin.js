@@ -6,14 +6,9 @@ var movieModel=require('../model/movie.js')
 var categoryModel=require('../model/category.js')
 var path = require('path');
 var fs = require('fs');
-<<<<<<< HEAD
 var multipart = require('connect-multiparty');
 var multipartMiddleware = multipart();//格式上传中间件
 
-=======
-var multipart = require('connect-multiparty'); 
-var multipartMiddleware = multipart();//格式上传数据
->>>>>>> 8ff939723ff613625e6c4b66c54cbdf6694853c3
 //将自定义分类剥离成中间件
 var {categoryCustom} = require ('../comments/index.js');
 
@@ -29,20 +24,13 @@ router.all('*', function(req, res, next) {
     next();
 });
 router.post('/set-upload/:type',multipartMiddleware,(req,res,next)=>{
-<<<<<<< HEAD
     var posterData = req.files.upfile
     var filePath = posterData.path
     var originalFilename = posterData.originalFilename
-=======
-    var posterData = req.files.upfile,
-     	filePath = posterData.path,
-     	originalFilename = posterData.originalFilename;
->>>>>>> 8ff939723ff613625e6c4b66c54cbdf6694853c3
     if(originalFilename){
     	fs.readFile(filePath,(err,data)=>{
     		var timeStamp=Date.now(),
     		 	type=posterData.type.split('/')[1],
-<<<<<<< HEAD
     		 	newname,newPath;
     		 	if(req.params.type=='poster'){
 	    		 	newname=timeStamp+'.'+type
@@ -56,21 +44,6 @@ router.post('/set-upload/:type',multipartMiddleware,(req,res,next)=>{
     			res.json({
     				data:'http://localhost:8888/'+req.params.type+'/'+newname,
     				success:1,
-=======
-    		 	newname,
-    		 	newPath;
-    		if(req.params.type=="user"){
-    			newname=timeStamp+'.'+type
-    			newPath=path.join(__dirname,'../','/poster/images/'+newname)
-    		}else if(req.params.type=='poster'){
-    			newname=req.session.user.userName+'.'+type
-    			newPath=path.join(__dirname,'../','/public/poster/'+newname)
-    		}
-    		fs.writeFile(newPath,data,(err,data)=>{
-    			res.json({
-    				success:1,
-    				data:newPath
->>>>>>> 8ff939723ff613625e6c4b66c54cbdf6694853c3
     			})
     		})
     	})

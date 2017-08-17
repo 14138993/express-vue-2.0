@@ -39,7 +39,9 @@ var CommentSchema= new Schema({
 });
 
 CommentSchema.pre('save',function(next){
-	this.send_time=Date.now()
+	if(this.isNew){
+		this.send_time=Date.now()
+	}
 	next()
 })
 

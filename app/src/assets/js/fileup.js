@@ -1,9 +1,5 @@
 
-var upfile=function(url,callback){
- var file = document.querySelector('#file');
-	 var upload = document.querySelector('#upload');
-	 var progress = document.querySelector('#progress');
-	 var image = document.querySelector('#image');
+
 
 var upfile=function(){
  var file = document.getElementById('file');

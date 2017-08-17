@@ -77,28 +77,15 @@ router.get('/get-detile', function(req, res,next) {
 	if(!id)return;
 	MovieModel.findById(id,(err,movie)=>{
 		if(err){
-			console.log(err);
+			console.log(err)
 			return
 		}
-	CommentModel
-		.find({movie:id})
-		.sort('praise_count')
-		.populate('from','userName')
-		.populate('replay.from replay.to','userName')
-		.exec((err,comment)=>{
-			if(err){
-				console.log(err)
-			}
-			res.json({
-				data:{
-					movie,
-					comment
-				},
-				success:1,
-				url:req.url
-			})
+		res.json({
+			data:movie,
+			success:1,
+			url:req.url
 		})
-	})
+	})	
 });
 
 module.exports = router;
