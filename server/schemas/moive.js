@@ -10,6 +10,15 @@ var MovieSchema = new Schema({
 	summary:String,
 	flash:String,
 	url:String,	
+	praise_count:{
+		type:Number,
+		default:0
+	},
+	praise_user_id:Array,	
+	PV:{
+		type:Number,
+		default:0
+	},	
 	category:{
 		type:ObjectId,
 		ref:'category'

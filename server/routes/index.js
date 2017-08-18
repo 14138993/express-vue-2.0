@@ -3,6 +3,7 @@ var router = express.Router();
 var MovieModel=require('../model/movie.js')
 var CommentModel= require('../model/comment.js')
 var CategoryModel= require('../model/category.js')
+var praiseModel = require('../model/praiseCount.js')
 /* GET home page. */
 router.all('*', function(req, res, next) {
 	  console.log('this is lochost 8888')
@@ -10,6 +11,39 @@ router.all('*', function(req, res, next) {
     res.setHeader('Content-Type', 'application/x-www-form-urlencoded');
     next();
 });
+//praise
+router.post('/add-praise',(req,res,next)=>{
+	var id=req.body.movies;
+	if(req.body.cid){
+
+	}else{
+		// 样就完成了数组对应元素的删除。如果要添加元素的话，用到的就不是$pull而是$addToSet，语法还是一样的。
+		MovieModel.update({_id:id},{$int:{"praise_count":1},$addToSet:{'praise_user_id':req.body.user}},(err,movies)=>{
+			console.log(movies)
+				res.json({
+					data:movies,
+					success:1
+				})
+		})
+	}
+})
+router.post('/delet-praise',(req,res,next)=>{
+	var id=req.body.id
+	if(req.body.cid){
+
+	}else{
+		MovieModel.update({_id:id},{$int:{"praise_count":-1},$pull:{'praise_user_id':req.body.user}},(err,movies)=>{
+				res.json({
+					data:true,
+					success:1
+				})
+		})
+	}	
+})
+
+
+
+//index
 router.get('/get-home-list', function(req, res, next) {
 	CategoryModel
 	  .find()
@@ -75,17 +109,38 @@ router.get('/get-result',(req,res,next)=>{
 router.get('/get-detile', function(req, res,next) {
 	let id=req.query.id
 	if(!id)return;
-	MovieModel.findById(id,(err,movie)=>{
-		if(err){
-			console.log(err)
-			return
-		}
-		res.json({
-			data:movie,
-			success:1,
-			url:req.url
+	MovieModel.update({_id: id}, {"$inc": {'PV': 1}}, (err) => {
+		if (err) console.log(err);
+		MovieModel.find({_id:id},(err,movie)=>{
+				if(err){
+					console.log(err);
+					return
+				}
+				if(movie.praise_count>0){
+					movie.isClick=movie.praise_user_id.some(item=>{
+						return item==req.session.user._id
+					})
+				}else{
+					movie.isClick=false;
+				}
+			CommentModel
+				.find({movie:id})
+				.sort('praise_count')
+				.populate('from','userName img')
+				.populate('replay.from replay.to','userName img')
+				.exec((err,comment)=>{
+						if(err)console.log(err)
+						res.json({
+							data:{
+								movie,
+								comment
+							},
+							success:1,
+							url:req.url
+						})
+				})
+			})
 		})
-	})	
 });
 
 module.exports = router;

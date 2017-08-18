@@ -18,6 +18,10 @@ var CommentSchema= new Schema({
 		type:Number,
 		default:0
 	},
+	praise:{
+		type:ObjectId,
+		ref:'praise'
+	},		
 	content:String,
 	replay:[{
 			praise_count:{

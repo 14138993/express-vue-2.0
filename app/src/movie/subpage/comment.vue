@@ -243,9 +243,11 @@ p{
 <script>   
 import {mapState} from 'vuex'
     export default {
+        props:{
+            datas:'',
+        },
         data(){
             return {
-                datas:'',
                 body:{
                     content:'',
                 },
@@ -255,7 +257,7 @@ import {mapState} from 'vuex'
         computed:{
             ...mapState('user',{
                 user:state=>state.userMsg
-            })
+            }),
         },
         methods:{
             prise(){
@@ -269,7 +271,7 @@ import {mapState} from 'vuex'
                 query.id=id;
                 this.$http.ajax(res=>{
                     if(parent_id){
-                        this.datas.splice(index,1,res.comment)                       
+                        this.datas.splice(index,1,res.data.comment[0])              
                     }else{
                         this.datas.splice(index,1)
                     }
