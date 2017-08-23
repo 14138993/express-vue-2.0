@@ -1,6 +1,12 @@
+首页
 ![首页](/demonstrate/home.jpg)
+个人中心
 ![个人中心](/demonstrate/user.jpg)
+后台录入
 ![后台录入](/demonstrate/admin.jpg)
+后台列表
 ![后台列表](/demonstrate/adminlist.jpg)
+分类列表
 ![分类列表](/demonstrate/category.jpg)
+评论回复
 ![评论回复](/demonstrate/comment.jpg)
