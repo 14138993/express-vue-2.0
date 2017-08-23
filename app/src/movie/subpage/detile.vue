@@ -45,7 +45,9 @@
 					<span>播放次数:</span><span>{{dataList.PV}}</span>
 				</div>
 				<div class="icon">
-					<span class="icon_ask" @click='praise(1)'></span><span class="praise_count">{{dataList.praise_count}}</span>
+					<span class="icon_ask" @click='praise(1)' v-if='!dataList.isClick'></span>
+					<span class="icon_ask icon_ask_active" @click='praise(0)' v-else></span>
+					<span class="praise_count">{{dataList.praise_count}}</span>
 				</div>
 			</div>
 		</div>
@@ -98,9 +100,14 @@ import {mapState} from 'vuex'
 				var url
 				if(type){
 					url='api/movie/add-praise'
-					this.dataList.praise_count=this.dataList.praise_count++
+					this.dataList.praise_count++
+					this.dataList.isClick=true;
 				}else{
 					url='api/movie/delet-praise'
+					if(this.dataList.praise_count > 0 ) {
+						this.dataList.praise_count--;
+						this.dataList.isClick=false;
+					}
 				}
 				this.$http.ajax(res=>{
 
@@ -109,8 +116,8 @@ import {mapState} from 'vuex'
 			getData(id){
 				this.$http.ajax(res=>{
 					if(!res.success)return;
-					this.dataList=res.data.movie;
-					this.comment_content=res.data.comment;
+					this.dataList=res.data.movieData;
+					this.comment_content=res.data.comments;
 				},'api/movie/get-detile',{id:id},'GET')
 			}
 		},

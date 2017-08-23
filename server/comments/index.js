@@ -16,7 +16,25 @@ var categoryCustom=(req,res,next)=>{
     }  
     
 }
+var recursion= (msg,user) => {
+	var msg = msg.map(item=>{
+	        if(item.praise_count > 0) {
+	        	item._doc.isClick=item.praise_user_id.some(items=>{
+	        		return items == user
+	        	})
+	        }else{
+	        	item._doc.isClick=false
+	        }
+	        if(item.replay && item.replay.length){
+	        	recursion(item.replay,user)
+	        }
+	        return item
+	})
+	return msg;
+ }
+
 
 module.exports = {
-    categoryCustom
+    categoryCustom,
+    recursion
 }

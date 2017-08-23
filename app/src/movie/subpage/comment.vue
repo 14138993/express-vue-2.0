@@ -146,6 +146,7 @@ p{
 
 .time{
     width: 100%;
+    margin-bottom: 15px;
     .delet{
         margin-right:60px;
         background: url('../../assets/image/delet1.png') no-repeat;
@@ -177,7 +178,7 @@ p{
 <div id="lea_message">
 	<div id="list">
 		<ul>
-            <li v-for='(item,index) in datas'>              
+            <li v-for='(item,parentIndex) in datas'>              
                 <div class="po-avt-wrap">
                     <a href="#comment" @click='comment_add_replay(item._id,item.from._id,item.from.userName)'>
                         <img class="po-avt" :src="item.from.img">                     
@@ -190,38 +191,37 @@ p{
                                     <span class="name">{{item.from.userName + '：'}}</span>  
                                     <span class="content" v-html='item.content'> </span>
                                     <span class="icons">
-                                        <span class="iconzan" @click="prise()">                  
-                                                <!-- <i  class="icon_ask" title="赞"></i> -->
-                                                <i class="icon_ask icon_ask_active" title="取消赞"></i>                               
+                                        <span class="iconzan" >                  
+                                                <i  class="icon_ask" title="赞" v-if='!item.isClick' @click="praise(parentIndex,1,item._id)"></i>
+                                                <i class="icon_ask icon_ask_active" title="取消赞" v-else @click="praise(parentIndex,0,item._id)"></i>                               
                                                 <span>{{item.praise_count}}</span>                    
                                         </span>                                           
                                     </span>                                                                                      
                                 </p>                                    
                                 <p class="time">
                                       {{item.send_time | filter_time}}
-                                      <span class="delet" @click="delet(index,item._id)" ></span>
+                                      <span class="delet" @click="delet(parentIndex,item._id)" v-if='item.from._id == user.staff_id'></span>
                                 </p>                 
                             </div>                            
                         </div>
                     <template v-if='item.replay.length > 0'>
                         <div class="r" ></div>
                         <div class="cmt-wrap">
-                            <div class="po-hd" v-for='items in item.replay'>
+                            <div class="po-hd" v-for='(items,index) in item.replay'>
                                 <p class="po-name">
                                      <span class="name">{{items.from.userName + '：'}}</span>  
                                      <span class="content" v-html='items.content'> </span>
                                      <span class="icons">
-                                          <span class="iconzan" @click="prise()">                  
-                                                <!-- <i  class="icon_ask" title="赞"></i> -->
-                                                <i class="icon_ask icon_ask_active" title="取消赞"></i>                               
-                                                <span>{{item.praise_count}}</span>                    
+                                          <span class="iconzan">       
+                                                <i  class="icon_ask" title="赞" v-if='!items.isClick' @click="praise(index,1,item._id,items._id,parentIndex)"></i>
+                                                <i class="icon_ask icon_ask_active" title="取消赞" v-else @click="praise(index,0,item._id,items._id,parentIndex)"></i>                               
+                                                <span>{{items.praise_count}}</span>                    
                                           </span>                                           
                                       </span>                                                                                      
                                 </p>                                    
                                 <p class="time">
-                                <!-- | filter_net_time -->
                                       {{items.send_time | filter_time}}
-                                      <span class="delet" @click="delet(index,items._id,item._id)" ></span>
+                                      <span class="delet" @click="delet(index,items._id,item._id,parentIndex)" v-if='items.from._id == user.staff_id'></span>
                                 </p>                 
                             </div>
                         </div>
@@ -260,10 +260,28 @@ import {mapState} from 'vuex'
             }),
         },
         methods:{
-            prise(){
+            praise(index,type,cid,child_id,parent_index){
+                var url,body,target= child_id ? this.datas[parent_index].replay[index] : this.datas[index];
+                if(type){
+                        url='api/movie/add-praise'
+                        target.praise_count++
+                        target.isClick=true;                      
+                }else{
+                    url='api/movie/delet-praise'
+                    target.praise_count--
+                    target.isClick=false;                        
+                }
+                body={
+                    cid,
+                    child_id,
+                    movies:this.$route.query.id,
+                    user:this.user.staff_id
+                }
+                this.$http.ajax(res=>{
 
+                },url,body)
             },
-            delet(index,id,parent_id){
+            delet(target_index,id,parent_id,parent_index){
                 var query={};
                 if(parent_id){
                    query.parent_id=parent_id                    
@@ -271,9 +289,9 @@ import {mapState} from 'vuex'
                 query.id=id;
                 this.$http.ajax(res=>{
                     if(parent_id){
-                        this.datas.splice(index,1,res.data.comment[0])              
+                        this.datas[parent_index].replay.splice(target_index,1)
                     }else{
-                        this.datas.splice(index,1)
+                        this.datas.splice(target_index,1)
                     }
                 },'api/comment/delet-comment',query,'GET')
             },
