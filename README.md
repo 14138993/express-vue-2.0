@@ -19,7 +19,7 @@
 * 后台电影列表页，增删查改
 * 分类列表页，增删查看，以及在录入页增加自定义修改等；
 * 个人中心信息修改及个人头像上传修改。；
-### 二、网站整体效果，截图看[这里](https://github.com/chenjun1127/Movie-Site/blob/master/images.md)
+### 二、网站整体效果，截图看[这里](https://github.com/14138993/express-vue-2.0/blob/master/image.md)
 
 ### 四、安装及运行
 * 克隆项目，进入项目目录；
