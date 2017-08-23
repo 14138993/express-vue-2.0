@@ -23,13 +23,13 @@
 
 ### 四、安装及运行
 * 克隆项目，进入项目目录；
-git clone https://github.com/14138993/express-vue-2.0.git
-前端
-cd app && npm i
-npm run dev
-后端
-cd server && npm i
-npm start
+ *git clone https://github.com/14138993/express-vue-2.0.git
+ *前端
+ *cd app && npm i
+ *npm run dev
+ *后端
+ *cd server && npm i
+ *npm start
 
 
 ### 五、项目遗漏
