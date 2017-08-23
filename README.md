@@ -23,13 +23,16 @@
 
 ### 四、安装及运行
 * 克隆项目，进入项目目录；
- *git clone https://github.com/14138993/express-vue-2.0.git
- *前端
- *cd app && npm i
- *npm run dev
- *后端
- *cd server && npm i
- *npm start
+* git clone https://github.com/14138993/express-vue-2.0.git
+* 前端
+* cd app && npm i
+* npm run dev
+* 电影详情页的评论回复功能，以及对每条评论回复的点赞和取消点赞（只针对当前登录用户自己已点的评论或回复）
+  删除（只针对当前登录用户自己发布的评论或者回复）功能等
+* 后端
+* cd server && npm i
+* npm start
+
 
 
 ### 五、项目遗漏
