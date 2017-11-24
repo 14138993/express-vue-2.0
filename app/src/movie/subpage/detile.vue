@@ -1,8 +1,55 @@
+<style lang='scss' scoped>
+	.praise{
+		text-align: left;
+		.icon{
+			float: left;
+			margin-top:-7px;
+			span{
+				margin-right:10px;
+			}
+			.praise_count{
+				position: relative;
+				top: -3px;
+			}
+	        .icon_ask{
+	            background: url('../../assets/image/price1.png') no-repeat;
+	            width: 20px;
+	            height: 21px;
+	            display: inline-block;
+	            background-size: 100%;
+	            margin-top:4px;
+	        }
+	        .icon_ask_active{
+	            background: url('../../assets/image/price_active1.png') no-repeat;
+	            background-size: 100%;
+	        }
+        }
+        .PV{
+        	float:left;
+        	margin-right:15px;
+			span{
+				margin-right:5px;
+			}        	
+        }
+    }    
+</style>
+
+
 <template>
 <div class="container">
 	<div class="row" >
 		<div class="col-md-7">
 			<video :src="dataList.flash" autoplay="true" width="720" height="600" >您的浏览器不支持 video 标签。</video>
+			<div class="praise">
+				<div class="PV">
+					<span>播放次数:</span><span>{{dataList.PV}}</span>
+				</div>
+				<div class="icon">
+					<span class="icon_ask" @click='praise(1)' v-if='!dataList.isClick'></span>
+					<span class="icon_ask icon_ask_active" @click='praise(0)' v-else></span>
+					<span class="praise_count">{{dataList.praise_count}}</span>
+				</div>
+			</div>
 		</div>
 		<div class="col-md-5">
 			<dl class="dl-horizontal">
@@ -29,6 +76,7 @@
 </template>
 <script>
 import comment from './comment.vue'
+import {mapState} from 'vuex'
 	export default{
 		components:{
 			comment
@@ -42,12 +90,34 @@ import comment from './comment.vue'
 				},
 			}
 		},
+		computed:{
+			...mapState('user',{
+				 userMsg:state=>state.userMsg
+				})
+		},
 		methods:{
+			praise(type){
+				var url
+				if(type){
+					url='api/movie/add-praise'
+					this.dataList.praise_count++
+					this.dataList.isClick=true;
+				}else{
+					url='api/movie/delet-praise'
+					if(this.dataList.praise_count > 0 ) {
+						this.dataList.praise_count--;
+						this.dataList.isClick=false;
+					}
+				}
+				this.$http.ajax(res=>{
+
+				},url,{movies:this.$route.query.id,user:this.userMsg.staff_id})
+			},
 			getData(id){
 				this.$http.ajax(res=>{
 					if(!res.success)return;
-					this.dataList=res.data.movie;
-					this.comment_content=res.data.comment;
+					this.dataList=res.data.movieData;
+					this.comment_content=res.data.comments;
 				},'api/movie/get-detile',{id:id},'GET')
 			}
 		},

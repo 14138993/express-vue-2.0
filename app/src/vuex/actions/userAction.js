@@ -7,5 +7,11 @@ export const userAction = {
 	},
 	close({commit, state}){
 		commit(type.CLOSE_MODAL)
+	},
+	updataUser({commit,state},user){
+		commit(type.UPDATA_USER,user)
+	},
+	deletUser({commit,state}){
+		commit(type.DELET_USER)
 	}
 }

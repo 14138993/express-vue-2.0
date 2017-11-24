@@ -15,7 +15,6 @@
 <template>
 	<div class="container">
 		<div class="row">
-		<upload></upload>
 			<div class="form-group"  style='height:35px'>
 				<label  for="inputdouban" class="col-sm-2 control-label">
 				 同步豆瓣电影
@@ -98,7 +97,7 @@
 						<input type="text" id="#inputurl" class="form-control" v-model="form.url">
 					</div>				
 			</div>
-			<div class="form-group"  style='height:35px'>
+<!-- 			<div class="form-group"  style='height:35px'>
 				<label  for="#inputurl" class="col-sm-2 control-label">
 				上传海报地址
 				</label>
@@ -108,14 +107,8 @@
 							<span id="progress">0</span>
 							<img id="image" src="" width="200" />
 					</div>				
-			</div>	
-			<div class="form-group"  style='height:35px'>
-				<label  for="#inputurl" class="col-sm-2 control-label">
-				海报
-				</label>
-							<img id="image" src="http://localhost:8888/images/1502802052308.png" width="200" />
-								
-			</div>						
+			</div>	 -->
+					
 			<div class="form-group"  style='height:35px'>
 				<label  for="#inputflash" class="col-sm-2 control-label">
 				播放地址
@@ -263,7 +256,7 @@ export default {
   		this.getData(this.$route.query.movie_id);
   	}
   	this.getCatrgory()
-  	fileup()
+  	fileup('api/admin/set-upload/poster')
   }
 }
 </script>

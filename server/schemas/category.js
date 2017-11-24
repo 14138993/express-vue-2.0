@@ -7,6 +7,10 @@ var CategorySchema= new Schema({
 		type:ObjectId,
 		ref:'Moviemsg'		
 	}],
+    praise_count:{
+        type:Number,
+        default:0
+    },    
 	meta:{
 		createAt:{
 			type:Date,

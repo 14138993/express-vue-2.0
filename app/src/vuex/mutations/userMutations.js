@@ -5,5 +5,11 @@ export const userMuation = {
 	},
 	[type.CLOSE_MODAL](state){
 		state.is_open=false
+	},
+	[type.UPDATA_USER](state,user){
+		state.userMsg=user
+	},
+	[type.DELET_USER](state){
+		state.userMsg=''
 	}
 }

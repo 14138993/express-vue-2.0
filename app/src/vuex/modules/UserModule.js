@@ -4,7 +4,8 @@ import {userMuation} from '../mutations/userMutations'
 export default {
 	namespaced: true,
 	state:{
-		is_open:false
+		is_open:false,
+		userMsg:'',
 	},
 	actions:userAction,
     getters: userGetter,

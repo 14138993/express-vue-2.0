@@ -4,6 +4,10 @@ html {
     font-family: Arial,sans-serif;
     font-size: 13px
 }
+p{
+    margin: 0;
+    padding:0;  
+}
 .mains,#list{
     width:720px;
 }
@@ -115,49 +119,116 @@ html {
         margin-top:10px;
    }
 }	
+.po-name{
+    margin-top:-10px;
+    padding:10px 0px;
+    .icons{
+        float:right;
+        .icon_ask{
+            background: url('../../assets/image/price1.png') no-repeat;
+            width: 20px;
+            height: 21px;
+            display: inline-block;
+            background-size: 100%;
+            margin-top:4px;
+        }
+        .icon_ask_active{
+            background: url('../../assets/image/price_active1.png') no-repeat;
+            background-size: 100%;
+        }
+        span{
+            margin: 0 15px;
+            position: relative;
+            top: -4px;
+        }
+    }
+}
+
+.time{
+    width: 100%;
+    margin-bottom: 15px;
+    .delet{
+        margin-right:60px;
+        background: url('../../assets/image/delet1.png') no-repeat;
+        background-size: 100%;
+        width: 20px;
+        height: 21px;
+        display: inline-block; 
+        float:right;       
+    }
+}
+.name{
+    color:#337ab7;
+    font-size:18px;
+}
+.cmt-wrap{
+    padding:10px;
+}
+.cmt-hd{
+    padding-right:10px;
+}
+.content{
+    font-size:14px;
+    word-wrap:break-word;
+    width: 450px;
+    display:inline-block;
+}
 </style>
 <template>
-<div id="mains">
+<div id="lea_message">
 	<div id="list">
 		<ul>
-			<li v-for='(item,index) in datas'>
-						<div class="po-avt-wrap">
-							<a href="#comment" @click='comment_add_replay(item._id,item.from._id,item.from.userName)'>
-                                <img class="po-avt" src="images/n5.jpg">                     
-                            </a>
-						</div>
-						<div class="po-cmt">
-							<div class="po-hd">
-								<p class="po-name">
-									{{item.from.userName}}
-								</p>
-								<div class="post">
-									<p>
-										{{item.content}}
-									</p>
-			<!-- 						<img class="list-img" src="images/xa1.jpg" style="height: 80px;">
-									<img class="list-img" src="images/ma1.jpg" style="height: 80px;">
-									<img class="data-avt list-img" src="images/0.jpg" style="height: 80px;"> -->
-								</div>
-								<p class="time">
-									1分钟前
-								</p>
-							</div>
-                            <template v-if='item.replay.length > 0'>
-    							<div class="r"></div>
-    							<div class="cmt-wrap" v-for='(items,index) in item.replay'>
-    								<div class="like">
-    									<img src="images/l.png">
-    									<!-- 鹿晗，林更新，杨幂，angelababy，范冰冰... -->
-    								</div>
-    								<div class="cmt-list">
-    									<p><span>{{items.from.userName + ':'}}</span>{{items.content}}</p>
-    								</div>
-    							</div>
-                            </template>
-						</div>
-					</li>
-			</ul>
+            <li v-for='(item,parentIndex) in datas'>              
+                <div class="po-avt-wrap">
+                    <a href="#comment" @click='comment_add_replay(item._id,item.from._id,item.from.userName)'>
+                        <img class="po-avt" :src="item.from.img">                     
+                    </a>                             
+                </div>
+                <div class="po-cmt">
+                    <div class="po-hd">
+                        <div class="cmt-hd">
+                                <p class="po-name">
+                                    <span class="name">{{item.from.userName + '：'}}</span>  
+                                    <span class="content" v-html='item.content'> </span>
+                                    <span class="icons">
+                                        <span class="iconzan" >                  
+                                                <i  class="icon_ask" title="赞" v-if='!item.isClick' @click="praise(parentIndex,1,item._id)"></i>
+                                                <i class="icon_ask icon_ask_active" title="取消赞" v-else @click="praise(parentIndex,0,item._id)"></i>                               
+                                                <span>{{item.praise_count}}</span>                    
+                                        </span>                                           
+                                    </span>                                                                                      
+                                </p>                                    
+                                <p class="time">
+                                      {{item.send_time | filter_time}}
+                                      <span class="delet" @click="delet(parentIndex,item._id)" v-if='item.from._id == user.staff_id'></span>
+                                </p>                 
+                            </div>                            
+                        </div>
+                    <template v-if='item.replay.length > 0'>
+                        <div class="r" ></div>
+                        <div class="cmt-wrap">
+                            <div class="po-hd" v-for='(items,index) in item.replay'>
+                                <p class="po-name">
+                                     <span class="name">{{items.from.userName + '：'}}</span>  
+                                     <span class="content" v-html='items.content'> </span>
+                                     <span class="icons">
+                                          <span class="iconzan">       
+                                                <i  class="icon_ask" title="赞" v-if='!items.isClick' @click="praise(index,1,item._id,items._id,parentIndex)"></i>
+                                                <i class="icon_ask icon_ask_active" title="取消赞" v-else @click="praise(index,0,item._id,items._id,parentIndex)"></i>                               
+                                                <span>{{items.praise_count}}</span>                    
+                                          </span>                                           
+                                      </span>                                                                                      
+                                </p>                                    
+                                <p class="time">
+                                      {{items.send_time | filter_time}}
+                                      <span class="delet" @click="delet(index,items._id,item._id,parentIndex)" v-if='items.from._id == user.staff_id'></span>
+                                </p>                 
+                            </div>
+                        </div>
+                    </template>                      
+                </div>
+            </li>
+		</ul>
 	</div>
 	<div class="save_comment">
 	  <p class="title">我也说两句：</p>
@@ -170,6 +241,7 @@ html {
 </div>	
 </template>
 <script>   
+import {mapState} from 'vuex'
     export default {
         props:{
             datas:'',
@@ -182,7 +254,47 @@ html {
                 placeholder:'请输入评论:',
             }
         },
+        computed:{
+            ...mapState('user',{
+                user:state=>state.userMsg
+            }),
+        },
         methods:{
+            praise(index,type,cid,child_id,parent_index){
+                var url,body,target= child_id ? this.datas[parent_index].replay[index] : this.datas[index];
+                if(type){
+                        url='api/movie/add-praise'
+                        target.praise_count++
+                        target.isClick=true;                      
+                }else{
+                    url='api/movie/delet-praise'
+                    target.praise_count--
+                    target.isClick=false;                        
+                }
+                body={
+                    cid,
+                    child_id,
+                    movies:this.$route.query.id,
+                    user:this.user.staff_id
+                }
+                this.$http.ajax(res=>{
+
+                },url,body)
+            },
+            delet(target_index,id,parent_id,parent_index){
+                var query={};
+                if(parent_id){
+                   query.parent_id=parent_id                    
+                };
+                query.id=id;
+                this.$http.ajax(res=>{
+                    if(parent_id){
+                        this.datas[parent_index].replay.splice(target_index,1)
+                    }else{
+                        this.datas.splice(target_index,1)
+                    }
+                },'api/comment/delet-comment',query,'GET')
+            },
             cleaReplay(){
                 this.body.content='';
                 delete this.body.comment_id;
@@ -193,6 +305,11 @@ html {
                 this.body.comment_id=cid;
                 this.body.to=tid;
                 this.placeholder=`回复${name}:`
+            },
+            getCommnet(){
+                this.$http.ajax(res=>{
+
+                },'api/comment/get-comment-list',{movie_id:this.$route.query.id},'GET')
             },
             save(){
                 this.body.from=this.user.staff_id;

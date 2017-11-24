@@ -1,9 +1,12 @@
 
+
+
 var upfile=function(){
  var file = document.getElementById('file');
 	 var upload = document.getElementById('upload');
 	 var progress = document.getElementById('progress');
 	 var image = document.getElementById('image');
+
 	 var xhr = new XMLHttpRequest();
 	 upload.addEventListener('click', uploadFile, false);
 	 file.addEventListener('change', previewImage, false);
@@ -12,20 +15,26 @@ var upfile=function(){
 	 function uploadFile(event) {
 	 var formData = new FormData();
 	 formData.append('upfile', file.files[0]);
+	 xhr.onload = uploadSuccess;
+	 xhr.upload.onprogress = setProgress;
+	 xhr.open('post', url, true);
+
 	 console.log(file.files)
 	 console.log(formData)
 	 
 	 xhr.onload = uploadSuccess;
 	 xhr.upload.onprogress = setProgress;
 	 xhr.open('post', 'api/admin/set-upload/poster', true);
+
 	 xhr.send(formData);
 	 }
 	 
 	 // 成功上传
 	 function uploadSuccess(event) {
-	 if (xhr.readyState === 4) {
-	  console.log(xhr.responseText);
-	 }
+		 if (xhr.readyState === 4) {
+		 	var data=JSON.parse(xhr.responseText)
+		 	callback&&callback(data.data)
+		 }
 	 }
 	 
 	 // 进度条
@@ -48,3 +57,42 @@ var upfile=function(){
 
 
 export default upfile
+
+
+// class Yupfile {
+// 	constructor(el){
+// 		return new this.Init(el)
+// 	}
+// 	Init(obj){
+// 		var argumentsDefault ={
+// 			 el:'',
+// 			 botton:'',
+// 			 img:'',
+// 			 pregges:'',
+// 			 tar:true,
+// 			 multiple:false,
+// 			 request:{
+// 			 	endpoint:''
+// 			 },
+// 			 deleteUrl:{
+//                 method: 'POST',
+//                 endpoint:''		 	
+// 			 },
+// 			 validation:false,
+// 			 message:{
+
+// 			 },
+// 			 maxConnections: 6,
+// 			 callbacks:{
+// 			 	onDelet(){
+
+// 			 	},
+// 			 	onComplete(){
+
+// 			 	},
+// 			 }
+// 		},
+// 		var config=Object.assign(obj,argumentsDefault)
+// 	}
+	
+// }

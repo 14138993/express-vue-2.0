@@ -68,6 +68,7 @@ import {mapActions,mapState} from 'vuex'
 	    computed:{
             ...mapState('user',{
             	isOpen:state =>state.is_open,
+            	userMsg:state=> state.userMsg
             }),
             titleText(){
             	if(this.title==1){
@@ -81,15 +82,16 @@ import {mapActions,mapState} from 'vuex'
 	    },		
 		methods:{
 			...mapActions('user',[
-				"close"
+				"close",
+				'updataUser'
 			]),
 			save(){
 				this.sing.isAdmin=this.sing.isAdmin ? 1 :0;
 				this.$http.ajax(res=>{
 					if(!res.sccuess)return;
 					if(this.title==2){
-						this.user=res.data
-						this.$emit('logins',res.data)	
+						this.updataUser(res.data)
+						this.$emit('logins')	
 					};	
 					this.sing.userName=this.sing.password=''
 					this.sing.isAdmin=0					
